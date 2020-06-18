@@ -17,9 +17,11 @@ class Category(models.Model):
     https://docs.djangoproject.com/en/2.2/ref/models/fields/#field-types
      """
     name = models.CharField(max_length=100)
+
     class Meta:
         verbose_name = '分类'
         verbose_name_plural = verbose_name
+
 
     def __str__(self):
         return self.name
@@ -27,17 +29,22 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('blog:category', kwargs={'pk': self.pk})
 
+
 class Tag(models.Model):
     """
     标签 Tag 也比较简单，和 Category 一样。
     再次强调一定要继承 models.Model 类！
     """
     name = models.CharField(max_length=100)
+
     class Meta:
         verbose_name = '标签'
         verbose_name_plural = verbose_name
+
     def __str__(self):
         return self.name
+
+
 class Post(models.Model):
     title = models.CharField('标题', max_length=70)
     # 文章正文，我们使用了 TextField。
@@ -60,7 +67,7 @@ class Post(models.Model):
     # 如果你对 ForeignKey、ManyToManyField 不了解，请看教程中的解释，亦可参考官方文档：
     # https://docs.djangoproject.com/en/2.2/topics/db/models/#relationships
     category = models.ForeignKey(Category, verbose_name='分类', on_delete=models.CASCADE)
-    tags = models.ManyToManyField(Tag, verbose_name='标签',blank=True)
+    tags = models.ManyToManyField(Tag, verbose_name='标签', blank=True)
 
     # 文章作者，这里 User 是从 django.contrib.auth.models 导入的。
     # django.contrib.auth 是 django 内置的应用，专门用于处理网站用户的注册、登录等流程，User 是
@@ -68,7 +75,7 @@ class Post(models.Model):
     # 这里我们通过 ForeignKey 把文章和 User 关联了起来。
     # 因为我们规定一篇文章只能有一个作者，而一个作者可能会写多篇文章，因此这是一对多的关联关系，和
     # Category 类似。
-    author = models.ForeignKey(User, verbose_name='作者',on_delete=models.CASCADE)
+    author = models.ForeignKey(User, verbose_name='作者', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = '文章'

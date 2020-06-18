@@ -885,13 +885,18 @@ img {
 /**
  * 13.0 - Pagination
  */
-.pagination-simple {
-    padding-left: 30px;
+.pagination {
     font-size: 16px;
+    width: 100%;
+    text-align: center;
 }
 
 .pagination ul {
+    margin: auto;
+    width: 50%;
     list-style: none;
+    padding: 0px;
+
 }
 
 .pagination ul li {

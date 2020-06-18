@@ -1,24 +1,58 @@
+{% load static %}
+{% load blog_extras %}
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Black &amp; White</title>
+    <title>Black &amp; White</title>
 
-		<!-- meta -->
-		<meta charset="UTF-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	    <!-- css -->
-		<link rel="stylesheet" href="css/bootstrap.min.css">
-		<link rel="stylesheet" href="css/ionicons.min.css">
-		<link rel="stylesheet" href="css/pace.css">
-	    <link rel="stylesheet" href="css/custom.css">
+    <!-- css -->
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="{% static 'blog/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/css/pace.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/css/custom.css' %}">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/highlight.js/9.15.8/styles/github.min.css">
+    <style>
+    .codehilite {
+      padding: 0;
+    }
 
-	    <!-- js -->
-	    <script src="js/jquery-2.1.3.min.js"></script>
-	    <script src="js/bootstrap.min.js"></script>
-	    <script src="js/pace.min.js"></script>
-	    <script src="js/modernizr.custom.js"></script>
-	</head>
+    /* for block of numbers */
+    .hljs-ln-numbers {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      text-align: center;
+      color: #ccc;
+      border-right: 1px solid #CCC;
+      vertical-align: top;
+      padding-right: 5px;
+    }
+
+    .hljs-ln-n {
+      width: 30px;
+    }
+
+    /* for block of code */
+    .hljs-ln .hljs-ln-code {
+      padding-left: 10px;
+      white-space: pre;
+    }
+    </style>
+
+    <!-- js -->
+    <script src="{% static 'blog/js/jquery-2.1.3.min.js' %}"></script>
+    <script src="{% static 'blog/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'blog/js/pace.min.js' %}"></script>
+    <script src="{% static 'blog/js/modernizr.custom.js' %}"></script>
+</head>
 
 	<body>
 		<div class="container">	
@@ -64,125 +98,110 @@
 			<div class="container">
 				<div class="row">
 					<main class="col-md-12">
-						<article class="post post-1">
-							<header class="entry-header">
-								<h1 class="entry-title">
-									<a href="single.html">Adaptive Vs. Responsive Layouts And Optimal Text Readability</a>
-								</h1>
-								<div class="entry-meta">
-									<span class="post-category"><a href="#">Web Design</a></span>
-			
-									<span class="post-date"><a href="#"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">February 2, 2013</time></a></span>
-			
-									<span class="post-author"><a href="#">Albert Einstein</a></span>
-			
-									<span class="comments-link"><a href="">4 Comments</a></span>
-								</div>
-							</header>
-							<div class="entry-content clearfix">
-								<p>Responsive web design offers us a way forward, finally allowing us to design for the ebb and flow of things. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don’t look even slightly.</p>
-								<div class="read-more cl-effect-14">
-									<a href="#" class="more-link">Continue reading <span class="meta-nav">→</span></a>
-								</div>
-							</div>
-						</article>
+						{% for post in page_object.object_list %}
+                <article class="post post-{{ post.pk }}">
+                    <header class="entry-header">
+                        <h1 class="entry-title">
+                            <a href="{{post.get_absolute_url}}">{{ post.title }}</a>
+                        </h1>
+                        <div class="entry-meta">
+                            <span class="post-category"><a href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a></span>
+                            <span class="post-date"><a href="{% url 'blog:archive' post.created_time.year post.created_time.month %}"><time class="entry-date"
+                                                                      datetime="{{ post.created_time }}">{{ post.created_time }}</time></a></span>
+                            <span class="post-author"><a href="#">{{ post.author }}</a></span>
+                            <span class="comments-link"><a href="{{ post.get_absolute_url }}#comment-area">{{ post.comment_set.count }} 评论</a></span>
+                            <span class="views-count"><a href="{{ post.get_absolute_url }}">588 阅读</a></span>
+                        </div>
+                    </header>
+                    <div class="entry-content clearfix">
+                        <p>{{ post.excerpt }}</p>
+                        <div class="read-more cl-effect-14">
+                            <a class="more-link" href="{{post.get_absolute_url}}">继续阅读 <span class="meta-nav">→</span></a>
+                        </div>
+                    </div>
+                </article>
+            {% empty %}
+                <div class="no-post"> 暂时还没有发布的文章！</div>
+            {% endfor %}
 
-						<article class="post post-2">
-							<header class="entry-header">
-								<h1 class="entry-title">
-									<a href="single.html">Adaptive Vs. Responsive Layouts And Optimal Text Readability</a>
-								</h1>
-								<div class="entry-meta">
-									<span class="post-category"><a href="#">Web Design</a></span>
-			
-									<span class="post-date"><a href="#"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">February 2, 2013</time></a></span>
-			
-									<span class="post-author"><a href="#">Albert Einstein</a></span>
-			
-									<span class="comments-link"><a href="#">4 Comments</a></span>
-								</div>
-							</header>
-							<div class="entry-content clearfix">
-								<p>Responsive web design offers us a way forward, finally allowing us to design for the ebb and flow of things. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don’t look even slightly.</p>
-								<div class="read-more cl-effect-14">
-									<a href="#" class="more-link">Continue reading <span class="meta-nav">→</span></a>
-								</div>
-							</div>
-						</article>
+                <!-- 简单分页效果
+                <div class="pagination-simple">
+                    {% if page_object.has_previous %}
+                    <a href="{% url 'blog:index' %}?page={{page_object.previous_page_number}}">上一页</a>
+                    {% else %}
+                    <a href="#">上一页</a>
+                    {% endif %}
+                    <span class="current">第 {{ page_object.number }}页 / 共 {{ page_count }} 页</span>
+                    {% if page_object.has_next %}
+                    <a href="{% url 'blog:index' %}?page={{page_object.next_page_number}}">下一页</a>
+                    {% else %}
+                    <a href="#">下一页</a>
+                    {% endif %}
+                </div>
+-->
+ <!-- -->
+                <div class="pagination">
+                    <ul>
+                        {% if page_object.has_previous %}
+                       <li><a href="{% url 'blog:index' %}?page={{page_object.previous_page_number}}">上一页</a></li>
+                        {% else %}
+                        <li><a href="#">上一页</a></li>
+                        {% endif %}
 
-						<article class="post post-3">
-							<header class="entry-header">
-								<h1 class="entry-title">
-									<a href="single.html">Adaptive Vs. Responsive Layouts And Optimal Text Readability</a>
-								</h1>
-								<div class="entry-meta">
-									<span class="post-category"><a href="#" rel="category tag">Web Design</a></span>
-			
-									<span class="post-date"><a href="#"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">February 2, 2013</time></a></span>
-			
-									<span class="post-author"><a href="#">Albert Einstein</a></span>
-			
-									<span class="comments-link"><a href="#">4 Comments</a></span>
-								</div>
-							</header>
-							<div class="entry-content clearfix">
-								<p>Responsive web design offers us a way forward, finally allowing us to design for the ebb and flow of things. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don’t look even slightly.</p>
-								<div class="read-more cl-effect-14">
-									<a href="#" class="more-link">Continue reading <span class="meta-nav">→</span></a>
-								</div>
-							</div>
-						</article>
+                        {% for page_index in page_range %}
+                        {% ifequal page_index page_object.number %}
+                        <li class="current"><a href="{% url 'blog:index' %}?page={{ page_index }}">{{ page_index }}</a></li>
+                        {% else %}
+                        <li><a href="{% url 'blog:index' %}?page={{ page_index }}">{{ page_index }}</a></li>
+                        {% endifequal %}
+                        {% endfor %}
 
-						<article class="post post-4">
-							<header class="entry-header">
-								<h1 class="entry-title">
-									<a href="single.html">Adaptive Vs. Responsive Layouts And Optimal Text Readability</a>
-								</h1>
-								<div class="entry-meta">
-									<span class="post-category"><a href="#" rel="category tag">Web Design</a></span>
-			
-									<span class="post-date"><a href="#"><time class="entry-date" datetime="2012-11-09T23:15:57+00:00">February 2, 2013</time></a></span>
-			
-									<span class="post-author"><a href="#">Albert Einstein</a></span>
-			
-									<span class="comments-link"><a href="#">4 Comments</a></span>
-								</div>
-							</header>
-							<div class="entry-content clearfix">
-								<p>Responsive web design offers us a way forward, finally allowing us to design for the ebb and flow of things. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don’t look even slightly.</p>
-								<div class="read-more cl-effect-14">
-									<a href="#" class="more-link">Continue reading <span class="meta-nav">→</span></a>
-								</div>
-							</div>
-						</article>
+                        {% if page_object.has_next %}
+                        <li><a href="{% url 'blog:index' %}?page={{page_object.next_page_number}}">下一页</a></li>
+                        {% else %}
+                        <li><a href="#">下一页</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
 					</main>
 				</div>
 			</div>
 		</div>
-		<footer id="site-footer">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<p class="copyright">&copy; 2014 ThemeWagon.com</p>
-					</div>
-				</div>
-			</div>
-		</footer>
+<footer id="site-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <p class="copyright">&copy 2017 - 采集自<a href="http://www.cssmoban.com/"
+                                                        target="_blank" title="模板之家">模板之家</a>
+                    - 由<a href="http://zmrenwu.com/" title="网页模板" target="_blank">追梦人物的博客</a>修改
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
 
 		<!-- Mobile Menu -->
-		<div class="overlay overlay-hugeinc">
-			<button type="button" class="overlay-close"><span class="ion-ios-close-empty"></span></button>
-			<nav>
-				<ul>
-					<li><a href="index.html">Home</a></li>
-					<li><a href="full-width.html">Blog</a></li>
-					<li><a href="about.html">About</a></li>
-					<li><a href="contact.html">Contact</a></li>
-				</ul>
-			</nav>
-		</div>
+<div class="overlay overlay-hugeinc">
+    <button type="button" class="overlay-close"><span class="ion-ios-close-empty"></span></button>
+    <nav>
+        <ul>
+            <li><a href="{% url 'blog:index' %}">首页</a></li>
+            <li><a href="full-width.html">博客</a></li>
+            <li><a href="about.html">关于</a></li>
+            <li><a href="contact.html">联系</a></li>
+        </ul>
+    </nav>
+</div>
 
-		<script src="js/script.js"></script>
+<script src="{% static 'blog/js/script.js' %}"></script>
+<body>
+  <script src="https://cdn.bootcss.com/highlight.js/9.15.8/highlight.min.js"></script>
+  <script src="https://cdn.bootcss.com/highlightjs-line-numbers.js/2.7.0/highlightjs-line-numbers.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+  </script>
+</body>
 
 	</body>
 </html>

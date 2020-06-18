@@ -1,49 +1,89 @@
 {% extends 'base.html' %}
+{% load blog_extras %}
 {% block main %}
-            {% for post in post_list %}
-                <article class="post post-{{ post.pk }}">
-                    <header class="entry-header">
-                        <h1 class="entry-title">
-                            <a href="{{post.get_absolute_url}}">{{ post.title }}</a>
-                        </h1>
-                        <div class="entry-meta">
-                            <span class="post-category"><a href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a></span>
-                            <span class="post-date"><a href="{% url 'blog:archive' post.created_time.year post.created_time.month %}"><time class="entry-date"
-                                                                      datetime="{{ post.created_time }}">{{ post.created_time }}</time></a></span>
-                            <span class="post-author"><a href="#">{{ post.author }}</a></span>
-                            <span class="comments-link"><a href="{{ post.get_absolute_url }}#comment-area">{{ post.comment_set.count }} 评论</a></span>
-                            <span class="views-count"><a href="{{ post.get_absolute_url }}">588 阅读</a></span>
-                        </div>
-                    </header>
-                    <div class="entry-content clearfix">
-                        <p>{{ post.excerpt }}</p>
-                        <div class="read-more cl-effect-14">
-                            <a href="{{post.get_absolute_url}}" class="more-link">继续阅读 <span class="meta-nav">→</span></a>
-                        </div>
-                    </div>
-                </article>
-            {% empty %}
-                <div class="no-post"> 暂时还没有发布的文章！</div>
-            {% endfor %}
+<main class="col-md-8">
+    {% for post in page_object.object_list %}
+    <article class="post post-{{ post.pk }}">
+        <header class="entry-header">
+            <h1 class="entry-title">
+                <a href="{{post.get_absolute_url}}">{{ post.title }}</a>
+            </h1>
+            <div class="entry-meta">
+                <span class="post-category"><a href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a></span>
+                <span class="post-date"><a
+                        href="{% url 'blog:archive' post.created_time.year post.created_time.month %}"><time
+                        class="entry-date"
+                        datetime="{{ post.created_time }}">{{ post.created_time }}</time></a></span>
+                <span class="post-author"><a href="#">{{ post.author }}</a></span>
+                <span class="comments-link"><a href="{{ post.get_absolute_url }}#comment-area">{{ post.comment_set.count }} 评论</a></span>
+                <span class="views-count"><a href="{{ post.get_absolute_url }}">588 阅读</a></span>
+            </div>
+        </header>
+        <div class="entry-content clearfix">
+            <p>{{ post.excerpt }}</p>
+            <div class="read-more cl-effect-14">
+                <a class="more-link" href="{{post.get_absolute_url}}">继续阅读 <span class="meta-nav">→</span></a>
+            </div>
+        </div>
+    </article>
+    {% empty %}
+    <div class="no-post"> 暂时还没有发布的文章！</div>
+    {% endfor %}
 
-                <!-- 简单分页效果
-                <div class="pagination-simple">
-                    <a href="#">上一页</a>
-                    <span class="current">第 6 页 / 共 11 页</span>
-                    <a href="#">下一页</a>
-                </div>
-                -->
-                <div class="pagination">
-                    <ul>
-                        <li><a href="">1</a></li>
-                        <li><a href="">...</a></li>
-                        <li><a href="">4</a></li>
-                        <li><a href="">5</a></li>
-                        <li class="current"><a href="">6</a></li>
-                        <li><a href="">7</a></li>
-                        <li><a href="">8</a></li>
-                        <li><a href="">...</a></li>
-                        <li><a href="">11</a></li>
-                    </ul>
-                </div>
+    <!-- 简单分页效果
+    <div class="pagination-simple">
+        {% if page_object.has_previous %}
+        <a href="{% url 'blog:index' %}?page={{page_object.previous_page_number}}">上一页</a>
+        {% else %}
+        <a href="#">上一页</a>
+        {% endif %}
+        <span class="current">第 {{ page_object.number }}页 / 共 {{ page_count }} 页</span>
+        {% if page_object.has_next %}
+        <a href="{% url 'blog:index' %}?page={{page_object.next_page_number}}">下一页</a>
+        {% else %}
+        <a href="#">下一页</a>
+        {% endif %}
+    </div>
+-->
+
+    <div class="pagination">
+        <ul>
+            {% if page_object.has_previous %}
+            <li><a href="{% url 'blog:index' %}?page={{page_object.previous_page_number}}">上一页</a></li>
+            {% else %}
+            <li><a href="#">上一页</a></li>
+            {% endif %}
+            {% if before_page_range %}
+            <li><a href="{% url 'blog:index' %}?page={{ before_page_range.0 }}">...</a></li>
+            {% endif %}
+            {% for page_index in page_range %}
+            {% ifequal page_index page_object.number %}
+            <li class="current"><a href="{% url 'blog:index' %}?page={{ page_index }}">{{ page_index }}</a></li>
+            {% else %}
+            <li><a href="{% url 'blog:index' %}?page={{ page_index }}">{{ page_index }}</a></li>
+            {% endifequal %}
+            {% endfor %}
+            {% if next_page_range %}
+            <li><a href="{% url 'blog:index' %}?page={{ next_page_range.0 }}">...</a></li>
+            {% endif %}
+            {% if page_object.has_next %}
+            <li><a href="{% url 'blog:index' %}?page={{page_object.next_page_number}}">下一页</a></li>
+            {% else %}
+            <li><a href="#">下一页</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</main>
+
 {% endblock main %}
+{% block aside %}
+<aside class="col-md-4">
+    {% show_recent_posts %}
+    {% show_archives %}
+    {% show_categories %}
+    {% show_tags %}
+    <div class="rss">
+        <a href=""><span class="ion-social-rss-outline"></span> RSS 订阅</a>
+    </div>
+</aside>
+{% endblock aside %}

@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load comments_extras %}
+{% load blog_extras %}
 {% block main %}
+<main class="col-md-8">
     <article class="post post-{{post.pk}}">
                     <header class="entry-header">
                         <h1 class="entry-title">{{post.title}}</h1>
@@ -25,12 +27,22 @@
                     {% show_comments post %}
                     </div>
                 </section>
+</main>
 {% endblock main %}
-{% block toc %}
+{% block aside %}
+<aside class="col-md-4">
     {% if post.toc %}
         <div class="widget widget-content">
                     <h3 class="widget-title">文章目录</h3>
                     {{post.toc|safe}}
         </div>
     {% endif %}
-{% endblock toc %}
+    {% show_recent_posts %}
+    {% show_archives %}
+    {% show_categories %}
+    {% show_tags %}
+        <div class="rss">
+            <a href=""><span class="ion-social-rss-outline"></span> RSS 订阅</a>
+        </div>
+</aside>
+{% endblock aside %}

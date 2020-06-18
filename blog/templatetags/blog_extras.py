@@ -21,6 +21,7 @@ def show_archives(context):
 def show_categories(context):
     return {
         'category_list': Category.objects.all(),
+        'category_count': Category.objects.count(),
     }
 
 
