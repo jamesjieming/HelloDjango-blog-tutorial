@@ -2,7 +2,6 @@
 import markdown
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
-
 from .models import Post, Category, Tag
 from django.utils.text import slugify
 from markdown.extensions.toc import TocExtension
